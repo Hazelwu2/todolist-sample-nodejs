@@ -57,6 +57,15 @@ const requestListener = (req, res) => {
         errorHandle(res, 400)
       }
     })
+  } else if (req.url == '/todos' && req.method == 'DELETE') {
+
+    todos.length = 0
+    res.writeHead(200, headers)
+    res.write(JSON.stringify({
+      status: 'success',
+      data: todos
+    }))
+    res.end()
   }
   else {
     errorHandle(res, 404)

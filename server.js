@@ -1,5 +1,6 @@
 const http = require('http')
 const { v4: uuidv4 } = require('uuid')
+const errorHandle = require('./errorHandle')
 
 const todos = [
   {
@@ -35,12 +36,7 @@ const requestListener = (req, res) => {
       try {
         const title = JSON.parse(body).title
         if (title === undefined) {
-          res.writeHead(400, headers)
-          res.write(JSON.stringify({
-            status: 'error',
-            message: '欄位未填寫正確'
-          }))
-          res.end()
+          errorHandle(res, 400)
         } else {
           const todo = {
             title,
@@ -58,23 +54,12 @@ const requestListener = (req, res) => {
         }
 
       } catch (error) {
-        console.log('程式錯誤')
-        res.writeHead(400, headers)
-        res.write(JSON.stringify({
-          status: 'error',
-          message: '欄位未填寫正確或無此 todo id'
-        }))
-        res.end()
+        errorHandle(res, 400)
       }
     })
   }
   else {
-    res.writeHead(404, headers)
-    res.write(JSON.stringify({
-      status: 'failed',
-      message: '無此路由'
-    }))
-    res.end()
+    errorHandle(res, 404)
   }
 }
 

@@ -12,11 +12,18 @@ const requestListener = (req, res) => {
     body += chunk
   })
 
+  const getAllTodos = req.url === '/todos' && req.method === 'GET'
+  const createTodo = req.url === '/todos' && req.method === 'POST'
+  const deleteAllTodos = req.url === '/todos' && req.method === 'DELETE'
+  const deleteTodo = req.url.startsWith('/todos') && req.method === 'DELETE'
+  const updateTodo = req.url.startsWith('/todos') && req.method === 'PATCH'
+  const optionTodo = req.method === 'OPTIONS'
+
   // 取得所有 Todos
-  if (req.url === '/todos' && req.method === 'GET') {
+  if (getAllTodos) {
     successHandle(res, todos)
     // 新增一筆 todos
-  } else if (req.url === '/todos' && req.method === 'POST') {
+  } else if (createTodo) {
     req.on('end', () => {
       try {
         const title = JSON.parse(body).title
@@ -35,10 +42,10 @@ const requestListener = (req, res) => {
       }
     })
     // 刪除所有 todos
-  } else if (req.url === '/todos' && req.method === 'DELETE') {
+  } else if (deleteAllTodos) {
     todos.length = 0
     successHandle(res, todos)
-  } else if (req.url.startsWith('/todos') && req.method === 'DELETE') {
+  } else if (deleteTodo) {
     const id = req.url.split('/').pop()
     const index = todos.findIndex(el => el.id === id)
 
@@ -49,7 +56,7 @@ const requestListener = (req, res) => {
       errorHandle(res, 400)
     }
     // 更新單筆 todo
-  } else if (req.url.startsWith('/todos') && req.method === 'PATCH') {
+  } else if (updateTodo) {
     req.on('end', () => {
 
       try {
@@ -69,7 +76,7 @@ const requestListener = (req, res) => {
       }
     })
 
-  } else if (req.method === 'OPTIONS') {
+  } else if (optionTodo) {
     res.writeHead(200, headers)
     res.end()
   } else {

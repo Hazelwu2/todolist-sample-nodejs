@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "d3f8b8e1-7ae8-4a2e-bf81-6ba329e31ae3",
+		"name": "Todolist-Heroku(六角)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "取得所有 todos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://morning-depths-00564.herokuapp.com/todos",
+					"protocol": "https",
+					"host": [
+						"morning-depths-00564",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增 todos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"今天要寫作業\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://morning-depths-00564.herokuapp.com/todos",
+					"protocol": "https",
+					"host": [
+						"morning-depths-00564",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除全部 todos",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://morning-depths-00564.herokuapp.com/todos",
+					"protocol": "https",
+					"host": [
+						"morning-depths-00564",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除單筆 todos",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://morning-depths-00564.herokuapp.com/todos/dc66bec3-9aab-4d8a-9345-f55b78dfb2c8",
+					"protocol": "https",
+					"host": [
+						"morning-depths-00564",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos",
+						"dc66bec3-9aab-4d8a-9345-f55b78dfb2c8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "修改單筆 todo",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"今天要上六角的課\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://morning-depths-00564.herokuapp.com/todos/6d00acd1-5366-446d-af02-af4588df2aa3",
+					"protocol": "https",
+					"host": [
+						"morning-depths-00564",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos",
+						"6d00acd1-5366-446d-af02-af4588df2aa3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

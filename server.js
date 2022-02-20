@@ -81,6 +81,32 @@ const requestListener = (req, res) => {
     } else {
       errorHandle(res, 400)
     }
+  } else if (req.url.startsWith('/todos') && req.method === 'PATCH') {
+    req.on('end', () => {
+      try {
+        const title = JSON.parse(body).title
+        const id = req.url.split('/').pop()
+        const index = todos.findIndex(el => el.id === id)
+
+        if (title !== undefined && index !== -1) {
+          todos[index].title = title
+          res.writeHead(200, headers)
+          res.write(JSON.stringify({
+            status: 'success',
+            data: todos,
+          }))
+          res.end()
+        } else {
+          errorHandle(res, 400)
+        }
+
+      } catch (error) {
+        errorHandle(res, 400)
+      }
+    })
+  } else if (req.method === 'OPTIONS') {
+    res.writeHead(200, headers);
+    res.end()
   }
   else {
     errorHandle(res, 404)

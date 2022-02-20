@@ -16,6 +16,12 @@ const requestListener = (req, res) => {
     'Access-Control-Allow-Methods': 'PATCH, POST, GET, OPTIONS, DELETE'
   }
 
+  let body = ''
+  // 接收資料
+  req.on('data', (chunk) => {
+    body += chunk
+  })
+
 
   if (req.url == '/todos' && req.method === 'GET') {
     res.writeHead(200, headers)
@@ -24,9 +30,23 @@ const requestListener = (req, res) => {
       data: todos
     }))
     res.end()
-  } else if (req.method === 'OPTIONS') {
-    res.writeHead(200, headers)
-    res.end()
+  } else if (req.url == '/todos' && req.method == 'POST') {
+    req.on('end', () => {
+      const title = JSON.parse(body).title
+      const todo = {
+        title,
+        id: uuidv4()
+      }
+
+      todos.push(todo)
+
+      res.writeHead(200, headers)
+      res.write(JSON.stringify({
+        status: 'success',
+        data: todos
+      }))
+      res.end()
+    })
   }
   else {
     res.writeHead(404, headers)

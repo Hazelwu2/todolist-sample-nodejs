@@ -1,6 +1,6 @@
 const headers = {
   'Content-Type': 'application/json',
-  'Aceess-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
   'Aceess-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET POST OPTIONS DELETE PATCH'
 }
@@ -15,14 +15,15 @@ const successHandle = (res, data) => {
 }
 
 const errorHandle = (res, status) => {
-  const errorStatus = {
-    400: '查無此欄位或格式錯誤',
-    404: '查無對應路由'
+  const errorText = {
+    400: '格式錯誤或查無此 ID',
+    404: '無對應路由'
   }
+
   res.writeHead(status, headers)
   res.write(JSON.stringify({
     status: 'error',
-    message: errorStatus[status]
+    message: errorText[status]
   }))
   res.end()
 }

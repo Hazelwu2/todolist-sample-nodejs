@@ -10,8 +10,10 @@ const requestListener = (req, res) => {
   const deleteTodo = req.url.startsWith('/todos') && req.method === 'DELETE'
   const updateTodo = req.url.startsWith('/todos') && req.method === 'PATCH'
   const isOptions = req.method === 'OPTIONS'
+
   let body = ''
 
+  // 接收資料
   req.on('data', (chunk) => {
     body += chunk
   })
@@ -22,6 +24,7 @@ const requestListener = (req, res) => {
     req.on('end', () => {
       try {
         const title = JSON.parse(body).title
+
         if (title !== undefined) {
           const todo = {
             id: uuidv4(),

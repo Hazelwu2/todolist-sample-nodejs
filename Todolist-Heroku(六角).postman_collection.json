@@ -7,6 +7,19 @@
 	"item": [
 		{
 			"name": "取得所有 todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -27,12 +40,34 @@
 		},
 		{
 			"name": "新增 todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json()",
+							"pm.globals.set('todo_id', res.data[res.data.length - 1].id)",
+							"",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"pm.test(\"title 必須一致\", function () {",
+							"    const res = pm.response.json()",
+							"    const requestTitle = JSON.parse(pm.request.body.raw).title",
+							"",
+							"    pm.expect(res.data[res.data.length -1].title).to.eql(requestTitle)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"今天要寫作業\"\n}",
+					"raw": "{\n    \"title\": \"今天要喝{{$randomFullName}}牌的咖啡\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -56,6 +91,24 @@
 		},
 		{
 			"name": "刪除全部 todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"pm.test(\"清空 todos\", function() {",
+							"    const res = pm.response.json()",
+							"    pm.expect(res.data.length).to.equal(0)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -85,6 +138,19 @@
 		},
 		{
 			"name": "刪除單筆 todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -98,7 +164,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://morning-depths-00564.herokuapp.com/todos/dc66bec3-9aab-4d8a-9345-f55b78dfb2c8",
+					"raw": "https://morning-depths-00564.herokuapp.com/todos/{{todo_id}}",
 					"protocol": "https",
 					"host": [
 						"morning-depths-00564",
@@ -107,7 +173,7 @@
 					],
 					"path": [
 						"todos",
-						"dc66bec3-9aab-4d8a-9345-f55b78dfb2c8"
+						"{{todo_id}}"
 					]
 				}
 			},
@@ -115,6 +181,19 @@
 		},
 		{
 			"name": "修改單筆 todo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PATCH",
 				"header": [],
@@ -128,7 +207,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://morning-depths-00564.herokuapp.com/todos/6d00acd1-5366-446d-af02-af4588df2aa3",
+					"raw": "https://morning-depths-00564.herokuapp.com/todos/{{todo_id}}",
 					"protocol": "https",
 					"host": [
 						"morning-depths-00564",
@@ -137,7 +216,7 @@
 					],
 					"path": [
 						"todos",
-						"6d00acd1-5366-446d-af02-af4588df2aa3"
+						"{{todo_id}}"
 					]
 				}
 			},

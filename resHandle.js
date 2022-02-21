@@ -1,29 +1,28 @@
 const headers = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTION, DELETE, PATCH'
+  'Aceess-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
+  'Aceess-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET POST OPTIONS DELETE PATCH'
 }
 
 const successHandle = (res, data) => {
   res.writeHead(200, headers)
   res.write(JSON.stringify({
     status: 'success',
-    data: data
+    data
   }))
   res.end()
 }
 
 const errorHandle = (res, status) => {
-  const errorText = {
-    400: '查無此 id 或缺少欄位',
-    404: '無對應路由',
+  const errorStatus = {
+    400: '查無此欄位或格式錯誤',
+    404: '查無對應路由'
   }
-
   res.writeHead(status, headers)
   res.write(JSON.stringify({
     status: 'error',
-    message: errorText[status]
+    message: errorStatus[status]
   }))
   res.end()
 }

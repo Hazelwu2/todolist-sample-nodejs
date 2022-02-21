@@ -1,6 +1,6 @@
 const http = require('http')
 const { v4: uuidv4 } = require('uuid');
-const { successHandle, errorHandle } = require('./resHandle')
+const { headers, successHandle, errorHandle } = require('./resHandle')
 const todos = []
 
 const requestListener = (req, res) => {
@@ -9,9 +9,9 @@ const requestListener = (req, res) => {
   const deleteAllTodo = req.url === '/todos' && req.method === 'DELETE'
   const deleteTodo = req.url.startsWith('/todos') && req.method === 'DELETE'
   const updateTodo = req.url.startsWith('/todos') && req.method === 'PATCH'
-
+  const isOptions = req.method === 'OPTIONS'
   let body = ''
-  // 接收資料
+
   req.on('data', (chunk) => {
     body += chunk
   })
@@ -22,13 +22,11 @@ const requestListener = (req, res) => {
     req.on('end', () => {
       try {
         const title = JSON.parse(body).title
-
         if (title !== undefined) {
           const todo = {
             id: uuidv4(),
             title
           }
-
           todos.push(todo)
           successHandle(res, todos)
         } else {
@@ -38,23 +36,17 @@ const requestListener = (req, res) => {
         errorHandle(res, 400)
       }
     })
-
   } else if (deleteAllTodo) {
     todos.length = 0
     successHandle(res, todos)
   } else if (deleteTodo) {
-    try {
-      const id = req.url.split('/').pop()
-      const index = todos.findIndex(el => el.id === id)
+    const id = req.url.split('/').pop()
+    const index = todos.findIndex(el => el.id === id)
 
-      if (index !== -1) {
-        todos.splice(index, 1)
-        successHandle(res, todos)
-      } else {
-        errorHandle(res, 400)
-      }
-
-    } catch (error) {
+    if (index !== -1) {
+      todos.splice(index, 1)
+      successHandle(res, todos)
+    } else {
       errorHandle(res, 400)
     }
   } else if (updateTodo) {
@@ -66,7 +58,7 @@ const requestListener = (req, res) => {
 
         if (index !== -1 && title) {
           todos[index].title = title
-          successHandle(res, todos)
+          successHandle(res, todos[index])
         } else {
           errorHandle(res, 400)
         }
@@ -74,8 +66,10 @@ const requestListener = (req, res) => {
         errorHandle(res, 400)
       }
     })
-  }
-  else {
+  } else if (isOptions) {
+    res.writeHead(200, headers)
+    res.end()
+  } else {
     errorHandle(res, 404)
   }
 }

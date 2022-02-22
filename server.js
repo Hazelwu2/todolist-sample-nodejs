@@ -46,12 +46,12 @@ const requestListener = (req, res) => {
     const id = req.url.split('/').pop()
     const index = todos.findIndex(el => el.id === id)
 
-    if (index !== -1) {
-      todos.splice(index, 1)
-      successHandle(res, todos)
-    } else {
+    if (index === -1) {
       errorHandle(res, 400)
+      return
     }
+    todos.splice(index, 1)
+    successHandle(res, todos)
   } else if (updateTodo) {
     req.on('end', () => {
       try {

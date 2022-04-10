@@ -1,81 +1,13 @@
-const http = require('http')
-const { v4: uuidv4 } = require('uuid');
-const { headers, successHandle, errorHandle } = require('./resHandle')
-const todos = []
+import http from 'http';
+import app from './app.js'
+import mongoose from 'mongoose';
+const PORT = process.env.PORT || 3005
 
-const requestListener = (req, res) => {
-  const getAllTodo = req.url === '/todos' && req.method === 'GET'
-  const createTodo = req.url === '/todos' && req.method === 'POST'
-  const deleteAllTodo = req.url === '/todos' && req.method === 'DELETE'
-  const deleteTodo = req.url.startsWith('/todos') && req.method === 'DELETE'
-  const updateTodo = req.url.startsWith('/todos') && req.method === 'PATCH'
-  const isOptions = req.method === 'OPTIONS'
-
-  let body = ''
-
-  // 接收資料
-  req.on('data', (chunk) => {
-    body += chunk
+mongoose.connect('mongodb://localhost:27017/hotel')
+  .then(() => {
+    console.log('資料庫連接成功')
   })
+  .catch(error => console.log(error))
 
-  if (getAllTodo) {
-    successHandle(res, todos)
-  } else if (createTodo) {
-    req.on('end', () => {
-      try {
-        const title = JSON.parse(body).title
-
-        if (title !== undefined) {
-          const todo = {
-            id: uuidv4(),
-            title
-          }
-          todos.push(todo)
-          successHandle(res, todos)
-        } else {
-          errorHandle(res, 400)
-        }
-      } catch (error) {
-        errorHandle(res, 400)
-      }
-    })
-  } else if (deleteAllTodo) {
-    todos.length = 0
-    successHandle(res, todos)
-  } else if (deleteTodo) {
-    const id = req.url.split('/').pop()
-    const index = todos.findIndex(el => el.id === id)
-
-    if (index === -1) {
-      errorHandle(res, 400)
-      return
-    }
-    todos.splice(index, 1)
-    successHandle(res, todos)
-  } else if (updateTodo) {
-    req.on('end', () => {
-      try {
-        const title = JSON.parse(body).title
-        const id = req.url.split('/').pop()
-        const index = todos.findIndex(el => el.id === id)
-
-        if (index !== -1 && title) {
-          todos[index].title = title
-          successHandle(res, todos[index])
-        } else {
-          errorHandle(res, 400)
-        }
-      } catch (error) {
-        errorHandle(res, 400)
-      }
-    })
-  } else if (isOptions) {
-    res.writeHead(200, headers)
-    res.end()
-  } else {
-    errorHandle(res, 404)
-  }
-}
-
-const server = http.createServer(requestListener)
-server.listen(process.env.PORT || 10988)
+const server = http.createServer(app)
+server.listen(PORT)

@@ -7,3 +7,11 @@ export const handleChunk = async (req) => {
 
   return JSON.parse(Buffer.concat(buffers).toString())
 }
+
+export const handleUrl = async (req) => {
+  try {
+    return req.url.split('/').pop()
+  } catch (error) {
+    console.log(error)
+  }
+}
